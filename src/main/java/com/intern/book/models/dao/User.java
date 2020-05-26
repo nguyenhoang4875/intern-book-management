@@ -23,7 +23,7 @@ public class User {
     private Integer id;
 
     @NotNull
-    @Column
+    @Column(unique = true)
     @NonNull
     private String username;
 

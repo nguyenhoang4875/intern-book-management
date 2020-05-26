@@ -68,7 +68,6 @@ public class BookSecurityConfig extends WebSecurityConfigurerAdapter {
                 authorizeRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").fullyAuthenticated()
-                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .anyRequest().fullyAuthenticated();
 
 
