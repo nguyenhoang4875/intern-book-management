@@ -19,7 +19,6 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `book`.`role` (
   `id` INT NOT NULL,
   `name` NVARCHAR(45) NULL,
-  `description` NVARCHAR(200) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
