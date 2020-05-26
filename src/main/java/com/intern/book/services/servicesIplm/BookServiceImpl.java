@@ -8,6 +8,7 @@ import com.intern.book.services.BookService;
 import com.intern.book.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,16 +29,19 @@ public class BookServiceImpl implements BookService {
     private UserService userService;
 
     @Override
+    @Transactional
     public List<BookDto> getAllBooks() {
         return bookDaoToBookDtoConverter.convert(bookRepository.findAll());
     }
 
     @Override
+    @Transactional
     public BookDto getBookById(Integer bookId) {
         return bookDaoToBookDtoConverter.convert(bookRepository.findById(bookId).get());
     }
 
     @Override
+    @Transactional
     public BookDto addBook(BookDto bookDto) {
         Book book = bookDtoToBookDaoConverter.convert(bookDto);
         book.setCreatedAt(LocalDateTime.now());
@@ -47,6 +51,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public boolean checkCanEditBook(Integer bookId) {
         String usernameCurrent = userService.getCurrentUser().getUsername();
         String usernameCreatedBook = bookRepository.findById(bookId).get().getUser().getUsername();
@@ -54,6 +59,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public BookDto updateBook(BookDto bookDto) {
         Book book = bookRepository.getOne(bookDto.getId());
         book.setUpdatedAt(LocalDateTime.now());
