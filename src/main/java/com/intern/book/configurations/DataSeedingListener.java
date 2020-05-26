@@ -1,10 +1,10 @@
-/*
 package com.intern.book.configurations;
 
-import com.intern.blog.models.dao.Role;
-import com.intern.blog.models.dao.User;
-import com.intern.blog.repositories.RoleRepository;
-import com.intern.blog.repositories.UserRepository;
+
+import com.intern.book.models.dao.Role;
+import com.intern.book.models.dao.User;
+import com.intern.book.repositories.RoleRepository;
+import com.intern.book.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +30,15 @@ public class DataSeedingListener implements ApplicationListener<ContextRefreshed
     @Autowired
     private RoleRepository roleRepository;
 
-    private void addRoleIfMissing(String name, String description) {
+    private void addRoleIfMissing(String name) {
         if (roleRepository.findByName(name) == null) {
-            roleRepository.save(new Role(name, description));
+            roleRepository.save(new Role(name));
         }
     }
 
     private void addUserIfMissing(String username, String password, String... roles) {
         if (userRepository.findByUsername(username) == null) {
-            User user = new User(username, "John", "Doe", new BCryptPasswordEncoder().encode(password));
+            User user = new User(username, new BCryptPasswordEncoder().encode(password), "John", "Doe");
             user.setRoles(new HashSet<>());
 
             for (String role : roles) {
@@ -50,17 +50,16 @@ public class DataSeedingListener implements ApplicationListener<ContextRefreshed
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        addRoleIfMissing("ROLE_ADMIN", "Administrators");
-        addRoleIfMissing("ROLE_STAFF", "Staffs");
+        addRoleIfMissing("ROLE_ADMIN");
+        addRoleIfMissing("ROLE_USER");
 
-        addUserIfMissing("user", "fun123", "ROLE_STAFF");
-        addUserIfMissing("admin", "fun123", "ROLE_STAFF", "ROLE_ADMIN");
+        addUserIfMissing("user", "fun123", "ROLE_USER");
+        addUserIfMissing("admin", "fun123", "ROLE_USER", "ROLE_ADMIN");
 
         if (signingKey == null || signingKey.length() == 0) {
             String jws = Jwts.builder()
-                    .setSubject("blog")
-                    .signWith(SignatureAlgorithm.HS256, "blog").compact();
+                    .setSubject("book")
+                    .signWith(SignatureAlgorithm.HS256, "book").compact();
         }
     }
 }
-*/

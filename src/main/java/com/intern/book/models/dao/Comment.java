@@ -31,9 +31,4 @@ public class Comment {
     @JsonManagedReference
     private User user;
 
-    @ManyToOne
-    @JoinColumn
-    @JsonManagedReference
-    private Book book;
-
 }

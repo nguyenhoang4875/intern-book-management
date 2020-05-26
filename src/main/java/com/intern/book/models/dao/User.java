@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Data
 @Entity
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class User {
 
     @Id
@@ -25,13 +27,16 @@ public class User {
     @NonNull
     private String username;
 
+    @NonNull
     @Column(length = 70)
     private String password;
 
     @Column
+    @NonNull
     private String firstName;
 
     @Column
+    @NonNull
     private String lastName;
 
     @Column
