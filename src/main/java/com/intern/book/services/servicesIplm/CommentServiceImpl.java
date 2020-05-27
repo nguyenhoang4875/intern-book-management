@@ -47,17 +47,30 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDto save(Integer id, CommentDto commentDto) {
-        Book book = bookRepository.findById(id).get();
+    public CommentDto save(Integer bookId, CommentDto commentDto) {
+        Book book = bookRepository.findById(bookId).get();
         Comment comment = commentDtoToCommentDaoConverter.convert(commentDto);
         comment.setCreatedAt(LocalDateTime.now());
+        comment = commentRepository.save(comment);
         book.getComments().add(comment);
         comment.setUser(userService.getCurrentUser());
-        commentRepository.save(comment);
         if (commentDto.getId() == 0) {
             commentDto.setId(comment.getId());
         }
         return commentDaoToCommentDtoConverter.convert(comment);
+    }
+
+    @Override
+    public CommentDto update(Integer bookId, CommentDto commentDto) {
+        Optional<Comment> comment = commentRepository.findById(commentDto.getId());
+        if (comment.isPresent()) {
+            Comment commentUpdate = comment.get();
+            commentUpdate.setUpdatedAt(LocalDateTime.now());
+            commentUpdate.setMessage(commentDto.getMessage());
+            commentUpdate = commentRepository.save(commentUpdate);
+            return commentDaoToCommentDtoConverter.convert(commentUpdate);
+        }
+        throw new NotFoundException("comment not found with id: " + commentDto.getId());
     }
 
     @Override
@@ -69,5 +82,4 @@ public class CommentServiceImpl implements CommentService {
             throw new NotFoundException("comment not found with id: " + commentId);
         }
     }
-
 }

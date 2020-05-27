@@ -10,13 +10,12 @@ public class CommentDaoToCommentDtoConverter extends Converter<Comment, CommentD
 
     @Override
     public CommentDto convert(Comment source) {
-
         CommentDto commentDto = new CommentDto();
         commentDto.setId(source.getId());
         commentDto.setMessage(source.getMessage());
         commentDto.setCreatedAt(source.getCreatedAt());
         commentDto.setUpdatedAt(source.getUpdatedAt());
-        commentDto.setUsername(commentDto.getUsername());
+        commentDto.setUsername(source.getUser().getUsername());
         return commentDto;
     }
 }

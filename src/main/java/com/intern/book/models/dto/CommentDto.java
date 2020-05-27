@@ -24,7 +24,6 @@ public class CommentDto {
     @NonNull
     private LocalDateTime createdAt;
 
-    @NonNull
     private LocalDateTime updatedAt;
 
     private String username;
