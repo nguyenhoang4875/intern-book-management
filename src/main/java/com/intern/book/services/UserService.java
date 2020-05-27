@@ -16,4 +16,6 @@ public interface UserService {
     public void deleteById(int id);
 
     public User getCurrentUser();
+
+    User findOneByUsername(String username);
 }

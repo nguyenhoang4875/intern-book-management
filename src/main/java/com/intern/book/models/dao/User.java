@@ -7,6 +7,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,18 +26,26 @@ public class User {
     @NotNull
     @Column(unique = true)
     @NonNull
+    @NotEmpty
     private String username;
+
 
     @NonNull
     @Column(length = 70)
+    @NotEmpty
+    @NotNull
     private String password;
 
     @Column
     @NonNull
+    @NotNull
+    @NotEmpty
     private String firstName;
 
     @Column
     @NonNull
+    @NotNull
+    @NotEmpty
     private String lastName;
 
     @Column
@@ -48,7 +57,6 @@ public class User {
     @Column
     private int enabled;
 
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonBackReference
     @JoinTable(
@@ -57,6 +65,4 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
-
-
 }
