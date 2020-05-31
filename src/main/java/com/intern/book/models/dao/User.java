@@ -16,6 +16,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Table(name = "\"user\"")
 public class User {
 
     @Id
