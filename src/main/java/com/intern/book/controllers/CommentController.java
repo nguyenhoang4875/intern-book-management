@@ -26,17 +26,14 @@ public class CommentController {
         return commentService.save(bookId, commentDto);
     }
 
-
     @PutMapping("/{bookId}/{commentId}")
     public CommentDto updateCommentByPost(@PathVariable Integer bookId, @RequestBody @Valid CommentDto commentDto, @PathVariable Integer commentId) {
         commentDto.setId(commentId);
         return commentService.update(bookId, commentDto);
     }
 
-
     @DeleteMapping("/{bookId}/{commentId}")
     public void deleteCommentById(@PathVariable Integer bookId, @PathVariable Integer commentId) {
         commentService.deleteCommentById(bookId, commentId);
     }
-
 }

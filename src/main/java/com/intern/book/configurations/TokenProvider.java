@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import static com.intern.book.utils.Constants.ACCESS_TOKEN_VALIDITY_SECONDS;
 import static com.intern.book.utils.Constants.AUTHORITIES_KEY;
 
-
 @Component
 @Configuration
 public class TokenProvider {
@@ -68,24 +67,17 @@ public class TokenProvider {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
-        return (
-                username.equals(userDetails.getUsername())
-                        && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     public UsernamePasswordAuthenticationToken getAuthentication(final String token, final Authentication existingAuth, final UserDetails userDetails) {
-
         final JwtParser jwtParser = Jwts.parser().setSigningKey(signingKey);
-
         final Jws<Claims> claimsJws = jwtParser.parseClaimsJws(token);
-
         final Claims claims = claimsJws.getBody();
-
         final Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
 }
