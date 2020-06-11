@@ -39,7 +39,7 @@ public class Book {
     private LocalDateTime updatedAt;
 
     @Column
-    private int enabled;
+    private boolean enabled;
 
     @ManyToOne
     @JoinColumn

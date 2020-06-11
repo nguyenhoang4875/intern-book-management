@@ -15,4 +15,10 @@ public interface BookService {
     boolean checkCanEditBook(Integer bookId);
 
     BookDto updateBook(BookDto bookDto);
+
+    List<BookDto> getAllBooksOfUser();
+
+    List<BookDto> getAllBooksEnabled();
+
+    List<BookDto> search(String search);
 }

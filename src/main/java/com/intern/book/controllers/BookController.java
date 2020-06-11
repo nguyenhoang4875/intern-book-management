@@ -21,9 +21,24 @@ public class BookController {
         return bookService.getAllBooks();
     }
 
+    @GetMapping("/enabled")
+    public List<BookDto> getAllBooksEnabled() {
+        return bookService.getAllBooksEnabled();
+    }
+
+    @GetMapping("/mybooks")
+    public List<BookDto> getAllBooksOfUser() {
+        return bookService.getAllBooksOfUser();
+    }
+
     @GetMapping("/{bookId}")
-    public BookDto getBookbyId(@PathVariable Integer bookId) {
+    public BookDto getBookById(@PathVariable Integer bookId) {
         return bookService.getBookById(bookId);
+    }
+
+    @GetMapping("/search")
+    public List<BookDto> search(@RequestParam String search) {
+        return bookService.search(search);
     }
 
     @PostMapping

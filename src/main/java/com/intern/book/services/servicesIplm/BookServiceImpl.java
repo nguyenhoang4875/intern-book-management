@@ -71,4 +71,19 @@ public class BookServiceImpl implements BookService {
         return bookDaoToBookDtoConverter.convert(book);
     }
 
+    @Override
+    public List<BookDto> getAllBooksOfUser() {
+        return bookDaoToBookDtoConverter.convert(bookRepository.findAllByUser(userService.getCurrentUser()));
+    }
+
+    @Override
+    public List<BookDto> getAllBooksEnabled() {
+        return bookDaoToBookDtoConverter.convert(bookRepository.findAllByEnabled(true));
+    }
+
+    @Override
+    public List<BookDto> search(String search) {
+        return bookDaoToBookDtoConverter.convert(bookRepository.findDistinctByAuthorContainingOrTitleContainingIgnoreCase(search, search));
+    }
+
 }

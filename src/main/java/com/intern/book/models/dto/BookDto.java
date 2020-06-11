@@ -33,7 +33,7 @@ public class BookDto {
 
     private LocalDateTime updatedAt;
 
-    private int enabled;
+    private boolean enabled;
 
     private String username;
 
