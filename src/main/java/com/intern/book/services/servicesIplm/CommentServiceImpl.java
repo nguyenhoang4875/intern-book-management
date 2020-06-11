@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto update(Integer bookId, CommentDto commentDto) {
+    public CommentDto update(CommentDto commentDto) {
         Optional<Comment> comment = commentRepository.findById(commentDto.getId());
         if (comment.isPresent()) {
             Comment commentUpdate = comment.get();
@@ -74,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteCommentById(Integer postId, Integer commentId) {
+    public void deleteCommentById(Integer commentId) {
         Optional<Comment> comment = commentRepository.findById(commentId);
         if (comment.isPresent()) {
             commentRepository.delete(comment.get());

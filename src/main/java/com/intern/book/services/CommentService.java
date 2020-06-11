@@ -10,7 +10,7 @@ public interface CommentService {
 
     CommentDto save(Integer bookId, CommentDto commentDto);
 
-    void deleteCommentById(Integer bookId, Integer commentId);
+    void deleteCommentById(Integer commentId);
 
-    CommentDto update(Integer bookId, CommentDto commentDto);
+    CommentDto update(CommentDto commentDto);
 }
