@@ -4,8 +4,8 @@ import com.intern.book.exeptions.NotAuthorizedException;
 import com.intern.book.models.dto.BookDto;
 import com.intern.book.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,8 +20,8 @@ public class BookController {
 
     @Secured("ROLE_ADMIN")
     @GetMapping
-    public List<BookDto> getAllBooks() {
-        return bookService.getAllBooks();
+    public List<BookDto> getAllBooks(Pageable pageable) {
+        return bookService.getAllBooks(pageable);
     }
 
     @GetMapping("/enabled")
@@ -37,8 +37,8 @@ public class BookController {
 
     @Secured("ROLE_USER")
     @GetMapping("/mybooks")
-    public List<BookDto> getMyBooks() {
-        return bookService.getMyBooks();
+    public List<BookDto> getMyBooks(Pageable pageable) {
+        return bookService.getMyBooks(pageable);
     }
 
     @GetMapping("/{bookId}")
