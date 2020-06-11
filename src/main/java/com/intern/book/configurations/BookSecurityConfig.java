@@ -21,7 +21,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class BookSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
@@ -66,6 +66,7 @@ public class BookSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().
                 authorizeRequests()
                 .antMatchers("/api/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/books/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/register").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").fullyAuthenticated()
                 .anyRequest().fullyAuthenticated();

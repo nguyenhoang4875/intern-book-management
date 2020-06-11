@@ -11,5 +11,5 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     List<Book> findAllByEnabled(boolean enabled);
 
-    List<Book> findDistinctByAuthorContainingOrTitleContainingIgnoreCase(String title, String author);
+    List<Book> findDistinctByAuthorContainingIgnoreCaseOrTitleContainingIgnoreCase(String title, String author);
 }

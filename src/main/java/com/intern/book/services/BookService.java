@@ -16,9 +16,13 @@ public interface BookService {
 
     BookDto updateBook(BookDto bookDto);
 
-    List<BookDto> getAllBooksOfUser();
+    List<BookDto> getMyBooks();
 
     List<BookDto> getAllBooksEnabled();
 
-    List<BookDto> search(String search);
+    List<BookDto> search(String keyword);
+
+    List<BookDto> getAllBooksDisabled();
+
+    void deleteBook(Integer bookId);
 }

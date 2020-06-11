@@ -40,6 +40,7 @@ public class DataSeedingListener implements ApplicationListener<ContextRefreshed
         if (userRepository.findByUsername(username) == null) {
             User user = new User(username, new BCryptPasswordEncoder().encode(password), "John", "Doe");
             user.setRoles(new HashSet<>());
+            user.setEnabled(true);
 
             for (String role : roles) {
                 user.getRoles().add(roleRepository.findByName(role));

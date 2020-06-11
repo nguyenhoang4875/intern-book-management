@@ -72,7 +72,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> getAllBooksOfUser() {
+    public List<BookDto> getMyBooks() {
         return bookDaoToBookDtoConverter.convert(bookRepository.findAllByUser(userService.getCurrentUser()));
     }
 
@@ -82,8 +82,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> search(String search) {
-        return bookDaoToBookDtoConverter.convert(bookRepository.findDistinctByAuthorContainingOrTitleContainingIgnoreCase(search, search));
+    public List<BookDto> search(String keyword) {
+        return bookDaoToBookDtoConverter.convert(bookRepository.findDistinctByAuthorContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword, keyword));
+    }
+
+    @Override
+    public List<BookDto> getAllBooksDisabled() {
+        return bookDaoToBookDtoConverter.convert(bookRepository.findAllByEnabled(false));
+    }
+
+    @Override
+    public void deleteBook(Integer bookId) {
+        bookRepository.deleteById(bookId);
     }
 
 }

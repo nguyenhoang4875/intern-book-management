@@ -56,7 +56,7 @@ public class User {
     private String avatar;
 
     @Column
-    private int enabled;
+    private boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonBackReference

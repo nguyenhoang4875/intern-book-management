@@ -4,6 +4,8 @@ import com.intern.book.exeptions.NotAuthorizedException;
 import com.intern.book.models.dto.BookDto;
 import com.intern.book.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,6 +18,7 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+    @Secured("ROLE_ADMIN")
     @GetMapping
     public List<BookDto> getAllBooks() {
         return bookService.getAllBooks();
@@ -26,9 +29,16 @@ public class BookController {
         return bookService.getAllBooksEnabled();
     }
 
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/disabled")
+    public List<BookDto> getAllBooksDisabled() {
+        return bookService.getAllBooksDisabled();
+    }
+
+    @Secured("ROLE_USER")
     @GetMapping("/mybooks")
-    public List<BookDto> getAllBooksOfUser() {
-        return bookService.getAllBooksOfUser();
+    public List<BookDto> getMyBooks() {
+        return bookService.getMyBooks();
     }
 
     @GetMapping("/{bookId}")
@@ -37,8 +47,8 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public List<BookDto> search(@RequestParam String search) {
-        return bookService.search(search);
+    public List<BookDto> search(@RequestParam String keyword) {
+        return bookService.search(keyword);
     }
 
     @PostMapping
@@ -55,4 +65,12 @@ public class BookController {
         }
         throw new NotAuthorizedException("You don't have permit to edit this book");
     }
+
+    @DeleteMapping("/{bookId}")
+    public void deleteBook(@PathVariable Integer bookId) {
+        if (bookService.checkCanEditBook(bookId)) {
+            bookService.deleteBook(bookId);
+        }
+    }
+
 }
