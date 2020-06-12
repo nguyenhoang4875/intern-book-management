@@ -6,6 +6,7 @@ import com.intern.book.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,6 +37,7 @@ public class BookController {
     }
 
     @Secured("ROLE_USER")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/mybooks")
     public List<BookDto> getMyBooks(Pageable pageable) {
         return bookService.getMyBooks(pageable);
@@ -70,6 +72,8 @@ public class BookController {
     public void deleteBook(@PathVariable Integer bookId) {
         if (bookService.checkCanEditBook(bookId)) {
             bookService.deleteBook(bookId);
+        } else {
+            throw new NotAuthorizedException("You don't have permit to edit this book");
         }
     }
 

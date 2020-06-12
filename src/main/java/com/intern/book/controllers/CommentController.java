@@ -16,8 +16,8 @@ public class CommentController {
     private CommentService commentService;
 
     @GetMapping("/{bookId}")
-    public Set<CommentDto> getCommetsByBookId(@PathVariable Integer bookId) {
-        return commentService.getAllCommentsByPost(bookId);
+    public Set<CommentDto> getCommentsByBookId(@PathVariable Integer bookId) {
+        return commentService.getAllCommentsByBook(bookId);
     }
 
     @PostMapping("/{bookId}")
