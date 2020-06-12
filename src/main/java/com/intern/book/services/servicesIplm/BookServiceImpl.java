@@ -7,6 +7,7 @@ import com.intern.book.repositories.BookRepository;
 import com.intern.book.services.BookService;
 import com.intern.book.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +31,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public List<BookDto> getAllBooks() {
-        return bookDaoToBookDtoConverter.convert(bookRepository.findAll());
+    public List<BookDto> getAllBooks(Pageable pageable) {
+        return bookDaoToBookDtoConverter.convert(bookRepository.findAll(pageable).getContent());
     }
 
     @Override
@@ -72,8 +73,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> getMyBooks() {
-        return bookDaoToBookDtoConverter.convert(bookRepository.findAllByUser(userService.getCurrentUser()));
+    public List<BookDto> getMyBooks(Pageable pageable) {
+        return bookDaoToBookDtoConverter.convert(bookRepository.findAllByUser(userService.getCurrentUser(), pageable).getContent());
     }
 
     @Override
@@ -83,7 +84,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> search(String keyword) {
-        return bookDaoToBookDtoConverter.convert(bookRepository.findDistinctByAuthorContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword, keyword));
+        return bookDaoToBookDtoConverter.convert(bookRepository.findDistinctByAuthorContainingIgnoreCaseOrTitleContainingIgnoreCaseAndEnabled(keyword, keyword, true));
     }
 
     @Override

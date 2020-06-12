@@ -1,12 +1,13 @@
 package com.intern.book.services;
 
 import com.intern.book.models.dto.BookDto;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface BookService {
 
-    List<BookDto> getAllBooks();
+    List<BookDto> getAllBooks(Pageable pageable);
 
     BookDto getBookById(Integer bookId);
 
@@ -16,7 +17,7 @@ public interface BookService {
 
     BookDto updateBook(BookDto bookDto);
 
-    List<BookDto> getMyBooks();
+    List<BookDto> getMyBooks(Pageable pageable);
 
     List<BookDto> getAllBooksEnabled();
 
