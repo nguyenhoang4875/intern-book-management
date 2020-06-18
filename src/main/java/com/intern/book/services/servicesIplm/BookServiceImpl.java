@@ -47,6 +47,7 @@ public class BookServiceImpl implements BookService {
         Book book = bookDtoToBookDaoConverter.convert(bookDto);
         book.setCreatedAt(LocalDateTime.now());
         book.setUser(userService.getCurrentUser());
+        book.setEnabled(true);
         bookDto.setId(bookRepository.save(book).getId());
         return bookDaoToBookDtoConverter.convert(book);
     }
