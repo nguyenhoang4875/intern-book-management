@@ -1,6 +1,7 @@
 package com.intern.book.services.servicesIplm;
 
 import com.intern.book.converter.bases.Converter;
+import com.intern.book.exeptions.NotFoundException;
 import com.intern.book.models.dao.Book;
 import com.intern.book.models.dto.BookDto;
 import com.intern.book.repositories.BookRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -38,7 +40,10 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookDto getBookById(Integer bookId) {
-        return bookDaoToBookDtoConverter.convert(bookRepository.findById(bookId).get());
+        if (checkBookExistById(bookId)) {
+            return bookDaoToBookDtoConverter.convert(bookRepository.findById(bookId).get());
+        }
+        throw new NotFoundException("Book not found with id: " + bookId);
     }
 
     @Override
@@ -54,9 +59,12 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public boolean checkCanEditBook(Integer bookId) {
-        String usernameCurrent = userService.getCurrentUser().getUsername();
-        String usernameCreatedBook = bookRepository.findById(bookId).get().getUser().getUsername();
-        return usernameCurrent == usernameCreatedBook;
+        if (checkBookExistById(bookId)) {
+            String usernameCurrent = userService.getCurrentUser().getUsername();
+            String usernameCreatedBook = bookRepository.findById(bookId).get().getUser().getUsername();
+            return usernameCurrent == usernameCreatedBook;
+        }
+        throw new NotFoundException("Book not found with id: " + bookId);
     }
 
     @Override
@@ -95,6 +103,15 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBook(Integer bookId) {
         bookRepository.deleteById(bookId);
+    }
+
+    @Override
+    public boolean checkBookExistById(Integer bookId) {
+        Optional<Book> book = bookRepository.findById(bookId);
+        if (book.isPresent()) {
+            return true;
+        }
+        return false;
     }
 
 }

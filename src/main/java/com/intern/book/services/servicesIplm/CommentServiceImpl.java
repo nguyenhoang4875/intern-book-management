@@ -39,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public Set<CommentDto> getAllCommentsByPost(Integer bookId) {
+    public Set<CommentDto> getAllCommentsByBook(Integer bookId) {
         Set<CommentDto> comments = commentDaoToCommentDtoConverter.convert(bookRepository.findById(bookId).get().getComments());
         comments = comments.stream().sorted(Comparator.comparing(CommentDto::getCreatedAt).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
         return comments;

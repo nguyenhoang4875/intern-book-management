@@ -6,7 +6,7 @@ import java.util.Set;
 
 public interface CommentService {
 
-    Set<CommentDto> getAllCommentsByPost(Integer postId);
+    Set<CommentDto> getAllCommentsByBook(Integer postId);
 
     CommentDto save(Integer bookId, CommentDto commentDto);
 
