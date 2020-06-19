@@ -33,19 +33,15 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
-
     public String storeFile(MultipartFile file) {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        System.out.println("file name: " + fileName);
         try {
-            // Check if the file's name contains invalid characters
-            if (fileName.contains("..")) {
-                throw new FileStorageException("Sorry! Filename contains invalid characters " + fileName);
-            }
             if (!file.getContentType().contains("image")) {
                 throw new FileStorageException("Sorry! File is not image. Please select an image! ");
             }
             //rename file
-            fileName = FilenameUtils.getBaseName(fileName) + "-" + System.nanoTime() + "." + FilenameUtils.getExtension(fileName);
+            fileName = FilenameUtils.getBaseName(fileName) + "-" + System.currentTimeMillis() + "." + FilenameUtils.getExtension(fileName);
 
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
