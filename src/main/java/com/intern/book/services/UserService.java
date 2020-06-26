@@ -24,4 +24,6 @@ public interface UserService {
     ResponseEntity<?> login(Login login);
 
     User registerAccount(User user);
+
+    boolean checkRoleAdmin();
 }
