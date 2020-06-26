@@ -1,11 +1,13 @@
 package com.intern.book.services.servicesIplm;
 
 import com.intern.book.configurations.TokenProvider;
+import com.intern.book.converter.bases.Converter;
 import com.intern.book.exeptions.NotFoundException;
 import com.intern.book.models.dao.Role;
 import com.intern.book.models.dao.User;
-import com.intern.book.models.dto.AuthToken;
 import com.intern.book.models.dto.Login;
+import com.intern.book.models.dto.UserDetailDto;
+import com.intern.book.models.dto.UserDto;
 import com.intern.book.repositories.UserRepository;
 import com.intern.book.services.RoleService;
 import com.intern.book.services.UserService;
@@ -45,16 +47,21 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleService roleService;
 
-    @Override
-    @Transactional
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
+    @Autowired
+    private Converter<User, UserDto> userDaoToUserDtoConverter;
+
+    @Autowired
+    private Converter<User, UserDetailDto> userDaoToUserDetailDtoConverter;
 
     @Override
-    @Transactional
-    public Optional<User> findById(int id) {
-        return userRepository.findById(id);
+    public List<UserDetailDto> getAllUsers() {
+        return userDaoToUserDetailDtoConverter.convert(userRepository.findAll());
+    }
+
+
+    @Override
+    public List<UserDetailDto> getUsersByRole(String role) {
+        return userDaoToUserDetailDtoConverter.convert(userRepository.findByRolesName(role));
     }
 
     @Override
@@ -63,11 +70,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Override
-    @Transactional
-    public void deleteById(int id) {
-        userRepository.deleteById(id);
-    }
 
     @Override
     @Transactional
@@ -98,7 +100,10 @@ public class UserServiceImpl implements UserService {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new AuthToken(token));
+        UserDto userDto = userDaoToUserDtoConverter.convert(userService.findOneByUsername(login.getUsername()));
+        userDto.setExpired(tokenProvider.getExpirationDateFromToken(token));
+        userDto.setToken(token);
+        return ResponseEntity.ok(userDto);
     }
 
     public User registerAccount(@Valid @RequestBody User user) {
@@ -115,6 +120,45 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public UserDetailDto update(UserDetailDto userDetailDto) {
+        User user = userRepository.getOne(userDetailDto.getId());
+        user.setUsername(userDetailDto.getUsername());
+        user.setFirstName(userDetailDto.getFirstName());
+        user.setLastName(userDetailDto.getLastName());
+        user.setEmail(userDetailDto.getEmail());
+        user.setEnabled(userDetailDto.isEnabled());
+        userRepository.save(user);
+        return userDetailDto;
+    }
+
+    @Override
+    public void delete(Integer userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            userRepository.delete(user.get());
+        } else {
+            throw new NotFoundException("User not found with id: " + userId);
+        }
+    }
+
+
+    @Override
+    public UserDetailDto getUserById(Integer userId) {
+        return userDaoToUserDetailDtoConverter.convert(userRepository.getOne(userId));
+    }
+
+    @Override
+    public boolean checkRoleAdmin() {
+        User user = getCurrentUser();
+
+        for (Role role : user.getRoles()) {
+            if (role.getName().equals("ROLE_ADMIN")) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
 
