@@ -27,8 +27,4 @@ public class AuthenticationController {
         return userService.registerAccount(user);
     }
 
-    @GetMapping("/admin")
-    public boolean checkRoleAdmin(){
-        return  userService.checkRoleAdmin();
-    }
 }

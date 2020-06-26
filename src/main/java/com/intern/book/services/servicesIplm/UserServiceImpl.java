@@ -6,6 +6,7 @@ import com.intern.book.exeptions.NotFoundException;
 import com.intern.book.models.dao.Role;
 import com.intern.book.models.dao.User;
 import com.intern.book.models.dto.Login;
+import com.intern.book.models.dto.UserDetailDto;
 import com.intern.book.models.dto.UserDto;
 import com.intern.book.repositories.UserRepository;
 import com.intern.book.services.RoleService;
@@ -49,16 +50,18 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Converter<User, UserDto> userDaoToUserDtoConverter;
 
-    @Override
-    @Transactional
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
+    @Autowired
+    private Converter<User, UserDetailDto> userDaoToUserDetailDtoConverter;
 
     @Override
-    @Transactional
-    public Optional<User> findById(int id) {
-        return userRepository.findById(id);
+    public List<UserDetailDto> getAllUsers() {
+        return userDaoToUserDetailDtoConverter.convert(userRepository.findAll());
+    }
+
+
+    @Override
+    public List<UserDetailDto> getUsersByRole(String role) {
+        return userDaoToUserDetailDtoConverter.convert(userRepository.findByRolesName(role));
     }
 
     @Override
@@ -67,11 +70,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Override
-    @Transactional
-    public void deleteById(int id) {
-        userRepository.deleteById(id);
-    }
 
     @Override
     @Transactional
@@ -120,6 +118,34 @@ public class UserServiceImpl implements UserService {
             user.setRoles(initRoles);
             return userService.save(user);
         }
+    }
+
+    @Override
+    public UserDetailDto update(UserDetailDto userDetailDto) {
+        User user = userRepository.getOne(userDetailDto.getId());
+        user.setUsername(userDetailDto.getUsername());
+        user.setFirstName(userDetailDto.getFirstName());
+        user.setLastName(userDetailDto.getLastName());
+        user.setEmail(userDetailDto.getEmail());
+        user.setEnabled(userDetailDto.isEnabled());
+        userRepository.save(user);
+        return userDetailDto;
+    }
+
+    @Override
+    public void delete(Integer userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            userRepository.delete(user.get());
+        } else {
+            throw new NotFoundException("User not found with id: " + userId);
+        }
+    }
+
+
+    @Override
+    public UserDetailDto getUserById(Integer userId) {
+        return userDaoToUserDetailDtoConverter.convert(userRepository.getOne(userId));
     }
 
     @Override
