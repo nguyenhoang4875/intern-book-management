@@ -1,6 +1,7 @@
 package com.intern.book.services.servicesIplm;
 
 import com.intern.book.converter.bases.Converter;
+import com.intern.book.exeptions.NotFoundException;
 import com.intern.book.models.dao.Book;
 import com.intern.book.models.dto.BookDto;
 import com.intern.book.repositories.BookRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -47,7 +49,7 @@ public class BookServiceImpl implements BookService {
         Book book = bookDtoToBookDaoConverter.convert(bookDto);
         book.setCreatedAt(LocalDateTime.now());
         book.setUser(userService.getCurrentUser());
-        book.setEnabled(true);
+        book.setEnabled(false);
         bookDto.setId(bookRepository.save(book).getId());
         return bookDaoToBookDtoConverter.convert(book);
     }
@@ -96,6 +98,18 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBook(Integer bookId) {
         bookRepository.deleteById(bookId);
+    }
+
+    @Override
+    public boolean updateStatusBook(Integer bookId) {
+        Optional<Book> optionalBook = bookRepository.findById(bookId);
+        if (optionalBook.isPresent()) {
+            Book book = optionalBook.get();
+            book.setEnabled(!book.isEnabled());
+            bookRepository.save(book);
+            return book.isEnabled();
+        }
+        throw new NotFoundException("Not found book with id: " + bookId);
     }
 
 }

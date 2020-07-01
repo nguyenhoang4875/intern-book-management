@@ -80,4 +80,10 @@ public class BookController {
         }
     }
 
+    @PutMapping("update-status/{bookId}")
+    public boolean updateStatusBook(@PathVariable Integer bookId) {
+        System.out.println("book id: "+bookId);
+        return bookService.updateStatusBook(bookId);
+    }
+
 }

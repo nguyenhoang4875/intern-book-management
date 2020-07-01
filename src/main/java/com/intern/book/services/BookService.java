@@ -26,4 +26,6 @@ public interface BookService {
     List<BookDto> getAllBooksDisabled();
 
     void deleteBook(Integer bookId);
+
+    boolean updateStatusBook(Integer bookId);
 }
