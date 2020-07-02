@@ -5,6 +5,7 @@ import com.intern.book.models.dto.BookDto;
 import com.intern.book.services.BookService;
 import com.intern.book.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class BookController {
 
     @Secured("ROLE_ADMIN")
     @GetMapping
-    public List<BookDto> getAllBooks(Pageable pageable) {
+    public Page<BookDto> getAllBooks(Pageable pageable) {
         return bookService.getAllBooks(pageable);
     }
 

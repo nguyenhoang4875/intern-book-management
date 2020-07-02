@@ -8,6 +8,7 @@ import com.intern.book.repositories.BookRepository;
 import com.intern.book.services.BookService;
 import com.intern.book.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -33,8 +35,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public List<BookDto> getAllBooks(Pageable pageable) {
-        return bookDaoToBookDtoConverter.convert(bookRepository.findAll(pageable).getContent());
+    public Page<BookDto> getAllBooks(Pageable pageable) {
+        Page page = bookRepository.findAll(pageable);
+         Page<BookDto> bookDtos =page.map(book  -> bookDaoToBookDtoConverter.convert((Book) book));
+        return bookDtos;
     }
 
     @Override

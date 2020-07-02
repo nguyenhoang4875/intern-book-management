@@ -22,4 +22,5 @@ public class BookDaoToBookDtoConverter extends Converter<Book, BookDto> {
         bookDto.setUsername(source.getUser().getUsername());
         return bookDto;
     }
+
 }
