@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -37,7 +36,7 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public Page<BookDto> getAllBooks(Pageable pageable) {
         Page page = bookRepository.findAll(pageable);
-         Page<BookDto> bookDtos =page.map(book  -> bookDaoToBookDtoConverter.convert((Book) book));
+        Page<BookDto> bookDtos = page.map(book -> bookDaoToBookDtoConverter.convert((Book) book));
         return bookDtos;
     }
 
@@ -90,8 +89,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> search(String keyword) {
-        return bookDaoToBookDtoConverter.convert(bookRepository.findDistinctByAuthorContainingIgnoreCaseOrTitleContainingIgnoreCaseAndEnabled(keyword, keyword, true));
+    public Page<BookDto> search(Pageable pageable,String keyword) {
+        Page page = bookRepository.findDistinctByAuthorContainingIgnoreCaseOrTitleContainingIgnoreCase(pageable,keyword, keyword);
+        Page<BookDto> bookDtos = page.map(book -> bookDaoToBookDtoConverter.convert((Book) book));
+        return bookDtos;
     }
 
     @Override

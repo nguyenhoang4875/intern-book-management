@@ -22,7 +22,7 @@ public interface BookService {
 
     List<BookDto> getAllBooksEnabled();
 
-    List<BookDto> search(String keyword);
+    Page<BookDto> search(Pageable pageable,String keyword);
 
     List<BookDto> getAllBooksDisabled();
 

@@ -1,16 +1,20 @@
 package com.intern.book.controllers;
 
 import com.intern.book.exeptions.NotAuthorizedException;
+import com.intern.book.models.dao.Book;
 import com.intern.book.models.dto.BookDto;
 import com.intern.book.services.BookService;
 import com.intern.book.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -52,9 +56,10 @@ public class BookController {
         return bookService.getBookById(bookId);
     }
 
+
     @GetMapping("/search")
-    public List<BookDto> search(@RequestParam String keyword) {
-        return bookService.search(keyword);
+    public Page<BookDto> search(Pageable pageable,@RequestParam String keyword) {
+        return bookService.search(pageable,keyword);
     }
 
     @PostMapping
