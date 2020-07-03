@@ -2,6 +2,7 @@ package com.intern.book.services.servicesIplm;
 
 import com.intern.book.configurations.TokenProvider;
 import com.intern.book.converter.bases.Converter;
+import com.intern.book.exeptions.ConflictException;
 import com.intern.book.exeptions.NotFoundException;
 import com.intern.book.models.dao.Role;
 import com.intern.book.models.dao.User;
@@ -109,7 +110,7 @@ public class UserServiceImpl implements UserService {
     public User registerAccount(@Valid @RequestBody User user) {
         User existingUser = userService.findOneByUsername((user.getUsername()));
         if (existingUser != null) {
-            throw new NotFoundException("This username was exist");
+            throw new ConflictException("This username was exist");
         } else {
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -128,6 +129,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDetailDto.getLastName());
         user.setEmail(userDetailDto.getEmail());
         user.setEnabled(userDetailDto.isEnabled());
+        user.setAvatar(userDetailDto.getAvatar());
         userRepository.save(user);
         return userDetailDto;
     }

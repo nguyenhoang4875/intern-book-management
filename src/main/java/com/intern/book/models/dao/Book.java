@@ -23,7 +23,7 @@ public class Book {
     @Column
     private String title;
 
-    @Column
+    @Column(length = 5000)
     private String description;
 
     @Column

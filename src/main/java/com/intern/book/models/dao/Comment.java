@@ -17,7 +17,7 @@ public class Comment {
     @Column
     private Integer id;
 
-    @Column
+    @Column(length = 5000)
     private String message;
 
     @Column

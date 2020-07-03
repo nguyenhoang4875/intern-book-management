@@ -27,4 +27,6 @@ public class CommentDto {
     private LocalDateTime updatedAt;
 
     private String username;
+
+    private String avatarUrl;
 }
