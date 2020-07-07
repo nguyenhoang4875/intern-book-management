@@ -15,6 +15,8 @@ public interface BookRepository extends JpaRepository<Book, Integer>, PagingAndS
 
     Page<Book> findAllByUser(User user, Pageable pageable);
 
+    List<Book> findAllByUser(User user);
+
     List<Book> findAllByEnabled(boolean enabled);
 
     Page<Book> findDistinctByAuthorContainingIgnoreCaseOrTitleContainingIgnoreCase(Pageable page,String title, String author);

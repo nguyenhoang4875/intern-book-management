@@ -4,11 +4,15 @@ import com.intern.book.configurations.TokenProvider;
 import com.intern.book.converter.bases.Converter;
 import com.intern.book.exeptions.ConflictException;
 import com.intern.book.exeptions.NotFoundException;
+import com.intern.book.models.dao.Book;
+import com.intern.book.models.dao.Comment;
 import com.intern.book.models.dao.Role;
 import com.intern.book.models.dao.User;
 import com.intern.book.models.dto.Login;
 import com.intern.book.models.dto.UserDetailDto;
 import com.intern.book.models.dto.UserDto;
+import com.intern.book.repositories.BookRepository;
+import com.intern.book.repositories.CommentRepository;
 import com.intern.book.repositories.UserRepository;
 import com.intern.book.services.RoleService;
 import com.intern.book.services.UserService;
@@ -53,6 +57,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private Converter<User, UserDetailDto> userDaoToUserDetailDtoConverter;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Override
     public List<UserDetailDto> getAllUsers() {
@@ -138,12 +148,20 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
+            List<Book> books = bookRepository.findAllByUser(user.get());
+            for (Book book:books ) {
+                bookRepository.delete(book);
+            }
+
+            List<Comment> comments = commentRepository.findAllByUser(user.get());
+            for (Comment comment: comments ) {
+                commentRepository.delete(comment);
+            }
             userRepository.delete(user.get());
         } else {
             throw new NotFoundException("User not found with id: " + userId);
         }
     }
-
 
     @Override
     public UserDetailDto getUserById(Integer userId) {
@@ -161,6 +179,5 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
-
 }
 

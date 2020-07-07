@@ -21,7 +21,7 @@ public class CommentDaoToCommentDtoConverter extends Converter<Comment, CommentD
         commentDto.setCreatedAt(source.getCreatedAt());
         commentDto.setUpdatedAt(source.getUpdatedAt());
         commentDto.setUsername(source.getUser().getUsername());
-        commentDto.setAvatarUrl(userService.getCurrentUser().getAvatar());
+        commentDto.setAvatarUrl(source.getUser().getAvatar());
         return commentDto;
     }
 }
