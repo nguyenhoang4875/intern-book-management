@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@CrossOrigin()
 @RequestMapping("api/books")
 public class BookController {
 
